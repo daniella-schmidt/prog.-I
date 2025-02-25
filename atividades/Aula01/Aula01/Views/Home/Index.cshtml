@@ -1,8 +1,27 @@
-﻿@{
+﻿@using Aula1.Models
+@model Variaveis
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
+
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>o valor de <b>Minimo byte</b>: <i>@Model.userCount</i></p>
+    <p>O valor de <b>Maximo byte</b>: <i>@Model.totalCount</i></p>
+
+    <p>-------------------------------</p>
+
+    <p>O valor de <b>Minimo byte</b>: <i>@Model.MinValue</i></p>
+    <p>O valor de <b>Maximo byte</b>: <i>@Model.MaxValue</i></p>
+    <p>O valor de <b>Minimo short</b>: <i>@Model.MiniValue</i></p>
+    <p>O valor de <b>Maximo short</b>: <i>@Model.MaxiValue</i></p>
+    <p>O valor de <b>Minimo int</b>: <i>@Model.MinimValue</i></p>
+    <p>O valor de <b>Maximo int</b>: <i>@Model.MaximValue</i></p>
+    <p>O valor de <b>Minimo uint</b>: <i>@Model.MinimoValue</i></p>
+    <p>O valor de <b>Maximo uint</b>: <i>@Model.MaximoValue</i></p>
+    <p>O valor de <b>Minimo long</b>: <i>@Model.MiniiValue</i></p>
+    <p>O valor de <b>Maximo long</b>: <i>@Model.MaxiiValue</i></p>
+
 </div>
