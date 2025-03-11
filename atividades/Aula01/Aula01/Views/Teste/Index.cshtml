@@ -1,0 +1,25 @@
+﻿@model Aula01.Controllers.Result
+
+@{
+}
+
+<hr />
+<form method="post" asp-action="Index" asp-controller="Teste">
+    <input type="text" id="texto" name="texto"/>
+    <input type="submit" value="Postar"/>
+</form>
+<hr/>
+
+@if (!string.IsNullOrEmpty(Model.Texto))
+{
+      <div>
+          <span>texto convertido: 
+              <strong>
+                  <italic>
+                      @Model.Texto
+                  </italic>
+              </strong>
+          </span>
+      </div>  
+}
+
