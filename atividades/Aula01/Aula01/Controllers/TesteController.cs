@@ -2,10 +2,7 @@
 
 namespace Aula01.Controllers
 {
-    public class Result
-    {
-        public string Texto = string.Empty;
-    }
+  
     public class TesteController :  Controller
     {
         private readonly ILogger<TesteController> _logger;

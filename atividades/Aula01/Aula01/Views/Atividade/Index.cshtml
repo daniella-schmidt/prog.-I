@@ -1,0 +1,25 @@
+﻿@model Aula01.Controllers.Result
+
+
+<hr />
+<form method="post" asp-action="Index" asp-controller="Atividade">
+    <input type="text" id="texto" name="texto" placeholder="Digite o texto" />
+    <select name="operacao">
+        <option value="cifrar">Cifrar</option>
+        <option value="decifrar">Decifrar</option>
+    </select>
+    <input type="submit" value="Processar" />
+</form>
+<hr />
+
+@if (Model != null && !string.IsNullOrEmpty(Model.Texto))
+{
+    <div>
+        <span>
+            Resultado:
+            <strong>
+                <em>@Model.Texto</em>
+            </strong>
+        </span>
+    </div>
+}
