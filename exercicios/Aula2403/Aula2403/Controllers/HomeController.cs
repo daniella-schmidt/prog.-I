@@ -13,6 +13,23 @@ namespace Aula2403.Controllers
             _logger = logger;
         }
 
+        [HttpPost]
+        public ActionResult ObterDia(string indice)
+        {
+            //criar um vetor com os dias da semana e de acordo com o usuario digite apareca o dia da semana de acorod com o vetor
+            string[] diasSemana = { "Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado" };
+
+            if (int.TryParse(indice, out int i) && i >= 0 && i < diasSemana.Length)
+            {
+                ViewBag.DiaEscolhido = diasSemana[i];
+            }
+            else
+            {
+                ViewBag.DiaEscolhido = "Entrada inválida. Digite um número entre 0 e 6.";
+            }
+
+            return View("Index");
+        }
         public IActionResult Index()
         {
             return View();

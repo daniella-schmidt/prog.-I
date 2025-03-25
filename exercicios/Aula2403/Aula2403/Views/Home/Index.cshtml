@@ -1,8 +1,15 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewBag.Title = "Dias da Semana";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Digite um número para ver o dia da semana:</h2>
+
+<form method="post" asp-action="ObterDia" >
+    <input type="text" name="indice" placeholder="0 a 6" />
+    <button type="submit">Enviar</button>
+</form>
+
+@if (ViewBag.DiaEscolhido != null)
+{
+    <p>Resultado: @ViewBag.DiaEscolhido</p>
+}
