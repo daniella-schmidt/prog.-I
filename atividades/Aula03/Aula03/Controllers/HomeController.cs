@@ -106,11 +106,49 @@ namespace Aula03.Controllers
 
             for (int i = 0; i < x; i++)
             {
+                //e se o laço fosse interrompido, se ele for maior  que 50
+                if (i > 50)
+                    break;
+
+                //caso o desejado que o laço seguisse em frente o forçando a continuar a execução
+                if ((i % 2) != 0)
+                    continue;
+
                 retorno = $"{i};";
             }
 
             return retorno;
         }
+
+        [HttpGet]
+
+        public string GetForeach(string color)
+        {
+            /*
+             o comando for each para cada sequência é utilizado para iterar por uma sequência de itens em uma coleção
+             e servir como uma opção simples de repetição
+             */
+
+            string[] colors = { "Vermelho", "Preto", "Dourado", "Roxo", "Azul", "Verde", "Cinza", "Branco", "Magenta", "Laranja", "Marrom", "Rosa" };
+
+            string retorno = string.Empty;
+
+            if (colors.Contains(
+                        char.ToUpper(color[0]) + color.Substring(1))
+               )
+                retorno = "A cor escolhida é válida.";
+            else
+                retorno = "Cor inválida.";
+
+            retorno += "\nLista de cores disponíveis: ";
+            foreach (string s in colors)
+            {
+                retorno += $"[{s}] ";
+            }
+
+            return retorno;
+        }
+
         public IActionResult Privacy()
         {
             return View();
