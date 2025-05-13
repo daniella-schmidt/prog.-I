@@ -17,6 +17,17 @@ namespace Aula05.Controllers
 
         public IActionResult Index()
         {
+            Customer c1 = new Customer();
+            c1.Name = "Jeno";
+            c1.ObjectCount++; // = 1
+            Customer.InstanceCount++;// =1
+
+            var c2 = new Customer();
+            c2.Name = "Haechan";
+            c2.ObjectCount++;//=1
+            Customer.InstanceCount++;//=2
+            //InstanceCount é da classe os objetos nada irão interferir nela.
+
             return View();
         }
 

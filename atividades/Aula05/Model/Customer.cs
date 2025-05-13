@@ -7,6 +7,8 @@
         public string? HomeAddress { get; set; }
         public string? WorkAdress { get; set; }
 
+        public static int InstanceCount = 0;
+        public int ObjectCount = 0;
         public bool Validate(){
             return true;
         }
