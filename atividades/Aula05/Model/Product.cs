@@ -9,7 +9,12 @@
 
         public bool Validate()
         {
-            return true;
+            bool isValid = true;
+            isValid =
+                //this, basicamente um operador para não deixar ambiguio. é útil para diferenciar variáveis locais de atributos da classe
+                !string.IsNullOrEmpty(this.ProductName) &&
+                (this.Id > 0) && (this.CurrentPrice >0);
+            return isValid;
         }
         public Product Retrieve()
         {

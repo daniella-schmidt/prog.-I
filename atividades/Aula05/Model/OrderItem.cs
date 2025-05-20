@@ -9,17 +9,17 @@
 
         public bool Validate()
         {
-            return true;
-        }
-        public OrderItem Retrieve()
-        {
-            return new OrderItem();
-        }
-        //1° snakecase depois camal
-        //primeiro o tipo depois a variavel
-        public void Save(OrderItem orderItem)
-        {
-
+            bool isValid = true;
+            isValid =
+                //this, basicamente um operador para não deixar ambiguio. é útil para diferenciar variáveis locais de atributos
+                //da classe que o validate está inserido
+                // neste caso é usado por pratica entre pr'ogramadores, mas não se faz util aqui
+                (this.Id > 0) &&
+                Product != null &&
+                (Quantity > 0) &&
+                (PurchasePrice > 0);
+               
+            return isValid;
         }
     }
 }
