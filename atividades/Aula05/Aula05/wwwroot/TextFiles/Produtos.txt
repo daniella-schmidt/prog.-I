@@ -1,0 +1,11 @@
+0;Object;exemplo;0
+1;Object;exemplo;10
+2;Object;exemplo;20
+3;Object;exemplo;30
+4;Object;exemplo;40
+5;Object;exemplo;50
+6;Object;exemplo;60
+7;Object;exemplo;70
+8;Object;exemplo;80
+9;Object;exemplo;90
+11;notebook;fsgs;5000
