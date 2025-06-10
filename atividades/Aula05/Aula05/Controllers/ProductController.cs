@@ -50,6 +50,7 @@
                 Directory.CreateDirectory(path);
             }
 
+            var filepath = Path.Combine(path, "Produtos.txt");
 
             if (!System.IO.File.Exists(filepath))
             {
