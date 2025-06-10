@@ -10,7 +10,7 @@ namespace Aula05.Controllers
         private readonly IWebHostEnvironment environment;
         private CustomerRepository _customerRepository;
         
-        ///metodo construtor retorna um objeto do tipo do construtor
+        //metodo construtor retorna um objeto do tipo do construtor
         public CustomerController(IWebHostEnvironment enviroment)
         {
            _customerRepository = new CustomerRepository();
@@ -45,35 +45,115 @@ namespace Aula05.Controllers
                     $" {c.Id};{c.Name};{c.HomeAddress!.Id};{c.HomeAddress.City};{c.HomeAddress.State_Province};{c.HomeAddress.Country};{c.HomeAddress.Street1};{c.HomeAddress.Street2};{c.HomeAddress.Postal_Code};{c.HomeAddress.Adress_Type}\n";
             }
 
+            SaveFile(fileContent, "DelimitatedFile.txt");
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult ExportFixedFile()
+        {
+            string fileContent = string.Empty;
+            foreach (Customer c in CustomerData.Customers)
+            {
+                fileContent +=
+                   String.Format("{0:5}", c.Id) +
+                   String.Format("{0:127}", c.Name) +
+                   String.Format("{0:5}", c.HomeAddress!.Id) +
+                   String.Format("{0:32}", c.HomeAddress!.City) +
+                   String.Format("{0:2}", c.HomeAddress!.State_Province) +
+                   String.Format("{0:32}", c.HomeAddress!.Country) +
+                   String.Format("{0:64}", c.HomeAddress!.Street1) +
+                   String.Format("{0:64}", c.HomeAddress!.Street2) +
+                   String.Format("{0:9}", c.HomeAddress!.Postal_Code) +
+                   String.Format("{0:16}", c.HomeAddress!.Adress_Type) + 
+                   "\n";
+            }
+
+            SaveFile(fileContent, "FixedFile.txt");
+
+            return RedirectToAction("Index");
+        }
+        
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (id is null || id.Value <= 0) 
+                return NotFound();
+
+            Customer customer = _customerRepository.Retrieve(id.Value);
+
+            if (customer == null)
+                return NotFound();
+
+            return View(customer);
+        }
+
+        [HttpPost]
+        public IActionResult ConfirmDelete(int? id)
+        {
+            if (id is null || id.Value <= 0)
+                return NotFound();
+
+            if (!_customerRepository.DeleteById(id.Value))
+                return NotFound();
+
+            return RedirectToAction("Index");
+        }
+
+        private bool SaveFile(string content, string fileName)
+        {
+            bool ret = true;
+            if(string.IsNullOrEmpty(content) || string.IsNullOrEmpty(fileName))
+                return false;
+
             var path = Path.Combine
                 (
                     environment.WebRootPath,
                     "TextFiles"
                 );
 
-            if (!System.IO.Directory.Exists(path))
-            { 
-                System.IO.Directory.CreateDirectory(path);
-            }
-
-            var filepath = Path.Combine
-                (
-                    environment.WebRootPath,
-                    path,
-                    "Clientes.txt"
-                );
-
-            if (!System.IO.File.Exists(filepath))//verifica se o arquivo já existe
+            try
             {
-                //sempre que estiver usando o IO precusa de limpeza de memoria. o using tbm pode ser usado para gerenciar o depouse da memoria
-                // por ser IO o using identifica que precisa realizar o depouse (limpeza de memoria)
-                using (StreamWriter sw = System.IO.File.CreateText(filepath))
+
+
+
+                if (!System.IO.Directory.Exists(path))
                 {
-                    sw.Write(fileContent);
-                } 
+                    System.IO.Directory.CreateDirectory(path);
+                }
+
+                var filepath = Path.Combine
+                    (
+                        environment.WebRootPath,
+                        path,
+                        fileName
+                    );
+
+                if (!System.IO.File.Exists(filepath))//verifica se o arquivo já existe
+                {
+                    //sempre que estiver usando o IO precisa de limpeza de memoria. o using tbm pode ser usado para gerenciar o depouse da memoria
+                    // por ser IO o using identifica que precisa realizar o depouse (limpeza de memoria)
+                    using (StreamWriter sw = System.IO.File.CreateText(filepath))
+                    {
+                        sw.Write(content);
+                    }
+                }
+            }
+            catch (IOException ioEx)
+            {
+                string msg = ioEx.Message;
+                //throw ioEx; -- joga o erro todo na tela do usuario
+                ret = false;
+            }
+            catch (Exception ex)
+            { 
+                string msg = ex.Message;
+                ret = false;
             }
 
-            return View();
+            return ret;
         }
     }
 }
+

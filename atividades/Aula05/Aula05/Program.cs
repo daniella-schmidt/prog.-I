@@ -39,8 +39,8 @@ static void FillCustomerData()
     {
         Customer customer = new()
         {
-            Id = i,
-            Name = $"Customer{i}",
+            Id = i + 1,
+            Name = $"Customer {i}",
             HomeAddress = new Adress()
             {
                 Id = i,
@@ -63,8 +63,8 @@ static void FillProductData()
     {
         Product product = new()
         {
-            Id = i,
-            ProductName = "Object",
+            Id = i + 1,
+            ProductName = $"Object {i}",
             Description = "exemplo",
             CurrentPrice = i * 10
         };

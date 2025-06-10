@@ -62,5 +62,31 @@
 
             return View();
         }
+
+    [HttpGet]
+    public IActionResult Delete(int? id)
+    {
+        if (id is null || id.Value <= 0)  // is or == diferenças??
+            return NotFound();
+
+        Product product = _repository.Retrieve(id.Value);
+
+        if (product == null)
+            return NotFound();
+
+        return View(product);
     }
+
+    [HttpPost]
+    public IActionResult ConfirmDelete(int? id)
+    {
+        if (id is null || id.Value <= 0)
+            return NotFound();
+
+        if (!_repository.DeleteById(id.Value))
+            return NotFound();
+
+        return RedirectToAction("Index");
+    }
+}
 

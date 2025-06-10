@@ -1,4 +1,8 @@
 ﻿@model List<Model.Customer>
+@{
+    ViewData["Title"] = "Lista de Clientes";
+}
+
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -30,7 +34,9 @@
                                     <a asp-action="Edit" asp-route-id="@customer.Id" class="btn btn-sm btn-warning">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <a asp-action="Delete" asp-route-id="@customer.Id" class="btn btn-sm btn-danger">
+                                    <a asp-action="Delete" asp-controller="Customer" asp-route-id="@customer.Id"
+                                       title="Excluir Customer @customer.Name"
+                                       class="btn btn-sm btn-danger">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </div>
@@ -48,7 +54,10 @@
         </div>
     }
     <a asp-action="ExportDelimitadedFile" asp-controller="Customer" class="btn btn-primary">
-        <i class="bi bi-file-earmark-arrow-down"></i> Exportar Dados
+        <i class="bi bi-file-earmark-arrow-down"></i> Exportar Delimitado
+    </a>
+    <a asp-action="ExportFixedFile" asp-controller="Customer" class="btn btn-primary">
+        <i class="bi bi-file-earmark-arrow-up"></i> Exportar Fixo
     </a>
 </div>
 
