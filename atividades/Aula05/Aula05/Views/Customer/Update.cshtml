@@ -1,5 +1,116 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Model.Customer
+
 @{
+    ViewData["Title"] = "Atualizar Cliente";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-person-gear me-2"></i>Atualizar Cliente
+                    </h3>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Update" method="post" class="needs-validation" novalidate>
+                        <input type="hidden" asp-for="Id" />
+
+                        @if (Model.HomeAddress == null)
+                        {
+                            Model.HomeAddress = new Model.Adress();
+                        }
+
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="bi bi-person-fill me-2"></i>Informações Pessoais
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label asp-for="Name" class="form-label">Nome Completo</label>
+                                    <input asp-for="Name" class="form-control" required />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                    <div class="invalid-feedback">
+                                        Por favor, informe o nome do cliente.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="bi bi-house-door-fill me-2"></i>Endereço Residencial
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label asp-for="HomeAddress.Street1" class="form-label">Rua/Avenida</label>
+                                    <input asp-for="HomeAddress.Street1" class="form-control" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label asp-for="HomeAddress.Street2" class="form-label">Complemento</label>
+                                    <input asp-for="HomeAddress.Street2" class="form-control" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="HomeAddress.City" class="form-label">Cidade</label>
+                                    <input asp-for="HomeAddress.City" class="form-control" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="HomeAddress.State_Province" class="form-label">Estado</label>
+                                    <input asp-for="HomeAddress.State_Province" class="form-control" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="HomeAddress.Postal_Code" class="form-label">CEP</label>
+                                    <input asp-for="HomeAddress.Postal_Code" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label asp-for="HomeAddress.Country" class="form-label">País</label>
+                                    <input asp-for="HomeAddress.Country" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Voltar para Lista
+                            </a>
+                            <div>
+                                <button type="reset" class="btn btn-outline-danger me-2">
+                                    <i class="bi bi-eraser me-2"></i>Limpar
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle me-2"></i>Salvar Alterações
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+@section Scripts {
+    <script>
+        (function () {
+            'use strict'
+
+            var forms = document.querySelectorAll('.needs-validation')
+
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
 }

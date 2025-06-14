@@ -1,72 +1,69 @@
-﻿    using Microsoft.AspNetCore.Mvc;
-    using Model;
-    using Repository;
+﻿using Microsoft.AspNetCore.Mvc;
+using Model;
+using Repository;
+using System.IO;
 
-    public class ProductController : Controller
+public class ProductController : Controller
+{
+    private readonly IWebHostEnvironment _environment;
+    private readonly ProductRepository _repository;
+
+    public ProductController(IWebHostEnvironment environment)
     {
-        public readonly IWebHostEnvironment environment;
-        private ProductRepository _repository;
+        _repository = new ProductRepository();
+        _environment = environment;
+    }
 
-        public ProductController(IWebHostEnvironment enviroment)
+    [HttpGet]
+    public IActionResult Index()
+    {
+        var products = _repository.RetrieveAll();
+        return View(products);
+    }
+
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Create(Product product)
+    {
+        if (ModelState.IsValid)
         {
-            _repository = new ProductRepository();
-            this.environment = enviroment;
+            _repository.Save(product);
+            return RedirectToAction("Index");
+        }
+        return View(product);
+    }
+
+    public IActionResult ExportDelimitadedFile()
+    {
+        string fileContent = string.Empty;
+        foreach (Product p in ProductData.Products)
+        {
+            fileContent += $"{p.Id};{p.ProductName};{p.Description};{p.CurrentPrice}\n";
         }
 
-        public IActionResult Index()
+        var path = Path.Combine(_environment.WebRootPath, "TextFiles");
+
+        if (!Directory.Exists(path))
         {
-            var products = _repository.RetrieveAll();
-            return View(products);
+            Directory.CreateDirectory(path);
         }
 
-        public IActionResult Create()
-        {
-            return View();
-        }
+        var filepath = Path.Combine(path, "Produtos.txt");
 
-        [HttpPost]
-        public IActionResult Create(Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                _repository.Save(product);
-                return RedirectToAction("Index");
-            }
-            return View(product);
-        }
+        System.IO.File.WriteAllText(filepath, fileContent);
 
-        public IActionResult ExportDelimitadedFile()
-        {
-            string fileContent = string.Empty;
-            foreach (Product c in ProductData.Products)
-            {
-                fileContent += $"{c.Id};{c.ProductName};{c.Description};{c.CurrentPrice}\n";
-            }
-
-            var path = Path.Combine(environment.WebRootPath, "TextFiles");
-
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            var filepath = Path.Combine(path, "Produtos.txt");
-
-            if (!System.IO.File.Exists(filepath))
-            {
-                using (StreamWriter sw = System.IO.File.CreateText(filepath))
-                {
-                    sw.Write(fileContent);
-                }
-            }
-
-            return View();
-        }
+        return RedirectToAction("Index");
+    }
 
     [HttpGet]
     public IActionResult Delete(int? id)
     {
-        if (id is null || id.Value <= 0)  // is or == diferenças??
+        if (id is null || id.Value <= 0)
             return NotFound();
 
         Product product = _repository.Retrieve(id.Value);
@@ -88,5 +85,30 @@
 
         return RedirectToAction("Index");
     }
-}
 
+    [HttpGet]
+    public IActionResult Update(int? id)
+    {
+        if (id is null || id <= 0)
+            return NotFound();
+
+        Product product = _repository.Retrieve(id.Value);
+
+        if (product == null)
+            return NotFound();
+
+        return View(product);
+    }
+
+    [HttpPost]
+    public IActionResult Update(Product product)
+    {
+        if (!ModelState.IsValid)
+            return View(product);
+
+        _repository.Update(product);
+
+        var products = _repository.RetrieveAll();
+        return View("Index", products);
+    }
+}

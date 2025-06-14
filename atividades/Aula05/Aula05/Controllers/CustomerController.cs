@@ -89,6 +89,35 @@ namespace Aula05.Controllers
             return View(customer);
         }
 
+        [HttpGet]
+        public IActionResult Update(int? id)
+        {
+            if (id is null || id <= 0)
+                return NotFound();
+
+            Customer customer = _customerRepository.Retrieve(id.Value);
+
+            if (customer == null)
+                return NotFound();
+
+            customer.HomeAddress ??= new Adress();
+
+            return View(customer);
+        }
+
+        [HttpPost]
+        public IActionResult Update(Customer c)
+        {
+            if (!ModelState.IsValid)
+                return View(c);
+
+            _customerRepository.Update(c);
+
+            List<Customer> customers = _customerRepository.RetrieveAll();
+            return View("Index", customers);
+        }
+
+
         [HttpPost]
         public IActionResult ConfirmDelete(int? id)
         {

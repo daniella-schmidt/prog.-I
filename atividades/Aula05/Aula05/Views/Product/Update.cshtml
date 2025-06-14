@@ -1,5 +1,108 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Model.Product
 @{
+    ViewData["Title"] = "Atualizar Produto";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-box-seam me-2"></i>Atualizar Produto
+                    </h3>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Update" method="post" class="needs-validation" novalidate>
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="bi bi-info-circle me-2"></i>Informações Básicas
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label asp-for="ProductName" class="form-label">Nome do Produto*</label>
+                                    <input asp-for="ProductName" class="form-control" required />
+                                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                                    <div class="invalid-feedback">
+                                        Por favor, informe o nome do produto.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="bi bi-card-text me-2"></i>Detalhes do Produto
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-8">
+                                    <label asp-for="Description" class="form-label">Descrição</label>
+                                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label asp-for="CurrentPrice" class="form-label">Preço Atual*</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">R$</span>
+                                        <input asp-for="CurrentPrice" class="form-control" type="number" step="0.01" required />
+                                    </div>
+                                    <span asp-validation-for="CurrentPrice" class="text-danger"></span>
+                                    <div class="invalid-feedback">
+                                        Por favor, informe um preço válido.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Voltar para Lista
+                            </a>
+                            <div>
+                                <button type="reset" class="btn btn-outline-danger me-2">
+                                    <i class="bi bi-eraser me-2"></i>Limpar
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle me-2"></i>Salvar Alterações
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+@section Scripts {
+    <script>
+        (function () {
+            'use strict'
+
+            var forms = document.querySelectorAll('.needs-validation')
+
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+
+            document.getElementById('CurrentPrice').addEventListener('blur', function() {
+                if(this.value) {
+                    this.value = parseFloat(this.value).toFixed(2);
+                }
+            });
+        })()
+    </script>
 }
