@@ -1,0 +1,150 @@
+﻿@model Aula05.ViewModels.OrderViewModel
+
+@{
+    ViewData["Title"] = "Pedido";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="bi bi-cart-plus"></i> Pedido
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form id="formOrder" method="post" asp-action="Create" asp-controller="Order">
+                        <div class="mb-3">
+                            <label asp-for="CustomerId" class="form-label">Cliente</label>
+                            <select asp-for="CustomerId" class="form-select">
+                                @if (Model.Customers != null)
+                                {
+                                    foreach (var c in Model.Customers)
+                                    {
+                                        <option value="@c.Id">@c.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <h5>Itens do Pedido</h5>
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Selecionar</th>
+                                        <th>Produto</th>
+                                        <th>Quantidade</th>
+                                        <th>Valor Unitário</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.SelectedItems != null)
+                                    {
+                                        for (int i = 0; i < Model.SelectedItems.Count; i++)
+                                        {
+                                            var item = Model.SelectedItems[i];
+                                            var product = item?.OrderItem?.Product;
+
+                                            if (product != null)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox"
+                                                               asp-for="@Model.SelectedItems[i].IsSelected"
+                                                               class="form-check-input item-checkbox" />
+                                                    </td>
+                                                    <td>
+                                                        @product.ProductName
+                                                        <input type="hidden"
+                                                               asp-for="@Model.SelectedItems[i].OrderItem.Product.Id" />
+                                                        <input type="hidden"
+                                                               asp-for="@Model.SelectedItems[i].OrderItem.Product.ProductName" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="number"
+                                                               asp-for="@Model.SelectedItems[i].OrderItem.Quantity"
+                                                               class="form-control quantity-input"
+                                                               min="1"
+                                                               value="1"
+                                                               disabled />
+                                                    </td>
+                                                    <td class="text-end">
+                                                        @(product.CurrentPrice.ToString("C"))
+                                                        <input type="hidden"
+                                                               asp-for="@Model.SelectedItems[i].OrderItem.Product.CurrentPrice" />
+                                                    </td>
+                                                    <td class="text-end subtotal">R$ 0,00</td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" asp-controller="Order" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Salvar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.item-checkbox').change(function() {
+                const row = $(this).closest('tr');
+                const quantityInput = row.find('.quantity-input');
+                quantityInput.prop('disabled', !this.checked);
+
+                if (!this.checked) {
+                    quantityInput.val(1);
+                }
+                calculateTotals();
+            });
+
+            $('.quantity-input').change(function() {
+                calculateTotals();
+            });
+
+            function calculateTotals() {
+                let totalAmount = 0;
+                let totalItems = 0;
+
+                $('tbody tr').each(function() {
+                    const checkbox = $(this).find('.item-checkbox');
+                    if (checkbox.prop('checked')) {
+                        const quantity = parseInt($(this).find('.quantity-input').val()) || 0;
+                        const priceText = $(this).find('td:nth-child(4)').text();
+                        const price = parseFloat(priceText.replace(/[^\d,-]/g, '').replace(',', '.')) || 0;
+                        const subtotal = quantity * price;
+
+                        $(this).find('.subtotal').text('R$ ' + subtotal.toFixed(2).replace('.', ','));
+                        totalAmount += subtotal;
+                        totalItems += quantity;
+                    } else {
+                        $(this).find('.subtotal').text('R$ 0,00');
+                    }
+                });
+
+                $('#totalAmount').text('R$ ' + totalAmount.toFixed(2).replace('.', ','));
+                $('#totalItems').text(totalItems + (totalItems === 1 ? ' item' : ' itens'));
+            }
+
+            calculateTotals();
+        });
+    </script>
+}
