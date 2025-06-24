@@ -17,7 +17,8 @@
                     <form id="formOrder" method="post" asp-action="Create" asp-controller="Order">
                         <div class="mb-3">
                             <label asp-for="CustomerId" class="form-label">Cliente</label>
-                            <select asp-for="CustomerId" class="form-select">
+                            <select asp-for="CustomerId" class="form-select" required>
+                                <option value="">Selecione um cliente</option>
                                 @if (Model.Customers != null)
                                 {
                                     foreach (var c in Model.Customers)
@@ -58,23 +59,25 @@
                                                     </td>
                                                     <td>
                                                         @product.ProductName
-                                                        <input type="hidden"
-                                                               asp-for="@Model.SelectedItems[i].OrderItem.Product.Id" />
-                                                        <input type="hidden"
-                                                               asp-for="@Model.SelectedItems[i].OrderItem.Product.ProductName" />
+                                                        <input type="hidden" asp-for="@Model.SelectedItems[i].OrderItem.Product!.Id" />
+                                                        <input type="hidden" asp-for="@Model.SelectedItems[i].OrderItem.Product!.ProductName" />
+                                                        <input type="hidden" asp-for="@Model.SelectedItems[i].OrderItem.Product!.CurrentPrice" />
                                                     </td>
                                                     <td>
-                                                        <input type="number"
+                                                        <!--  sempre ativo para preservar valor -->
+                                                        <input type="hidden"
                                                                asp-for="@Model.SelectedItems[i].OrderItem.Quantity"
+                                                               class="quantity-hidden" />
+                                                        <!-- visível que será sincronizado com o hidden -->
+                                                        <input type="number"
                                                                class="form-control quantity-input"
+                                                               data-index="@i"
                                                                min="1"
                                                                value="1"
-                                                               disabled />
+                                                               readonly />
                                                     </td>
                                                     <td class="text-end">
                                                         @(product.CurrentPrice.ToString("C"))
-                                                        <input type="hidden"
-                                                               asp-for="@Model.SelectedItems[i].OrderItem.Product.CurrentPrice" />
                                                     </td>
                                                     <td class="text-end subtotal">R$ 0,00</td>
                                                 </tr>
@@ -82,15 +85,26 @@
                                         }
                                     }
                                 </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <th colspan="4" class="text-end">Total:</th>
+                                        <th class="text-end" id="totalAmount">R$ 0,00</th>
+                                    </tr>
+                                </tfoot>
                             </table>
+
+                            <!-- Resumo-->
+                            <div class="alert alert-info">
+                                <strong>Resumo:</strong> <span id="totalItems">0 itens</span> selecionados
+                            </div>
                         </div>
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a asp-action="Index" asp-controller="Order" class="btn btn-outline-secondary me-md-2">
                                 <i class="bi bi-arrow-left"></i> Voltar
                             </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save"></i> Salvar
+                            <button type="submit" class="btn btn-primary" id="btnSubmit">
+                                <i class="bi bi-save"></i> Salvar Pedido
                             </button>
                         </div>
                     </form>
@@ -105,19 +119,67 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
+            // Manipular mudanças nos checkboxes
             $('.item-checkbox').change(function() {
                 const row = $(this).closest('tr');
                 const quantityInput = row.find('.quantity-input');
-                quantityInput.prop('disabled', !this.checked);
+                const quantityHidden = row.find('.quantity-hidden');
 
-                if (!this.checked) {
+                if (this.checked) {
+                    quantityInput.prop('readonly', false);
+                    quantityInput.addClass('border-primary');
+                    // Garantir que há um valor mínimo
+                    if (!quantityInput.val() || quantityInput.val() < 1) {
+                        quantityInput.val(1);
+                    }
+                } else {
+                    quantityInput.prop('readonly', true);
+                    quantityInput.removeClass('border-primary');
                     quantityInput.val(1);
                 }
+
+                // Sincronizar com campo hidden
+                quantityHidden.val(quantityInput.val());
                 calculateTotals();
             });
 
-            $('.quantity-input').change(function() {
+            // Manipular mudanças na quantidade
+            $('.quantity-input').on('input change', function() {
+                const index = $(this).data('index');
+                const quantityHidden = $(`input[name="SelectedItems[${index}].OrderItem.Quantity"]`);
+
+                // Garantir valor mínimo
+                if ($(this).val() < 1) {
+                    $(this).val(1);
+                }
+
+                // Sincronizar com campo hidden
+                quantityHidden.val($(this).val());
                 calculateTotals();
+            });
+
+            // Validar formulário antes do submit
+            $('#formOrder').submit(function(e) {
+                const selectedItems = $('.item-checkbox:checked').length;
+                const customerId = $('#CustomerId').val();
+
+                if (!customerId) {
+                    alert('Por favor, selecione um cliente.');
+                    e.preventDefault();
+                    return false;
+                }
+
+                if (selectedItems === 0) {
+                    alert('Por favor, selecione pelo menos um item para o pedido.');
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Mostrar loading no botão
+                $('#btnSubmit').prop('disabled', true)
+                             .html('<i class="bi bi-hourglass-split"></i> Salvando...');
+
+                return true;
             });
 
             function calculateTotals() {
@@ -126,25 +188,50 @@
 
                 $('tbody tr').each(function() {
                     const checkbox = $(this).find('.item-checkbox');
+                    const subtotalCell = $(this).find('.subtotal');
+
                     if (checkbox.prop('checked')) {
                         const quantity = parseInt($(this).find('.quantity-input').val()) || 0;
                         const priceText = $(this).find('td:nth-child(4)').text();
-                        const price = parseFloat(priceText.replace(/[^\d,-]/g, '').replace(',', '.')) || 0;
+                        // Melhor parsing do preço
+                        const price = parseFloat(
+                            priceText.replace('R$', '')
+                                   .replace(/\./g, '')
+                                   .replace(',', '.')
+                                   .trim()
+                        ) || 0;
+
                         const subtotal = quantity * price;
 
-                        $(this).find('.subtotal').text('R$ ' + subtotal.toFixed(2).replace('.', ','));
+                        subtotalCell.text('R$ ' + subtotal.toLocaleString('pt-BR', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }));
+
                         totalAmount += subtotal;
                         totalItems += quantity;
                     } else {
-                        $(this).find('.subtotal').text('R$ 0,00');
+                        subtotalCell.text('R$ 0,00');
                     }
                 });
 
-                $('#totalAmount').text('R$ ' + totalAmount.toFixed(2).replace('.', ','));
+                $('#totalAmount').text('R$ ' + totalAmount.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }));
+
                 $('#totalItems').text(totalItems + (totalItems === 1 ? ' item' : ' itens'));
+
             }
 
+            // Calcular totais iniciais
             calculateTotals();
+
+            // Monitorar mudanças no cliente
+            $('#CustomerId').change(function() {
+                calculateTotals();
+            });
         });
+
     </script>
 }

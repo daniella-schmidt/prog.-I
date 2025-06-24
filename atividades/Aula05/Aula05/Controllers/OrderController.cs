@@ -48,5 +48,33 @@ namespace Aula05.Controllers
 
             return View(viewModel);
         }
+
+        [HttpPost]
+        public IActionResult Create(OrderViewModel model)
+        {
+            Order order = new();
+            order.Customer = _customerRepository.Retrieve(model.CustomerId!.Value);
+            order.OrderDate = DateTime.Now;
+            order.OrderItems = new List<OrderItem>(); 
+
+            int count = 1;
+            foreach (var item in model.SelectedItems!)
+            {
+                if (item.IsSelected)
+                {
+                    order.OrderItems.Add(new OrderItem()
+                    {
+                        Id = count,
+                        Product = _productRepository.Retrieve(item.OrderItem.Product!.Id),
+                        Quantity = item.OrderItem.Quantity 
+                    });
+                    count++;
+                }
+            }
+
+            _orderRepository.Save(order);
+
+            return RedirectToAction("Index");
+        }
     }
 }
