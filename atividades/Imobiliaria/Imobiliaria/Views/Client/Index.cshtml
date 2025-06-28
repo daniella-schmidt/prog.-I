@@ -1,0 +1,47 @@
+﻿@model List<Model.Client>
+@{
+    ViewData["Title"] = "Clients";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <div class="d-flex justify-content-between mb-3">
+        <div>
+            <a asp-action="Create" class="btn btn-primary">New Client</a>
+        </div>
+        <div>
+            <a asp-action="ExportDelimitedFile" class="btn btn-success">Export Delimited</a>
+            <a asp-action="ExportFixedFile" class="btn btn-info">Export Fixed Format</a>
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>CPF</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in Model)
+            {
+                <tr>
+                    <td>@client.Id</td>
+                    <td>@client.Name</td>
+                    <td>@client.Email</td>
+                    <td>@client.Phone</td>
+                    <td>@client.CPF</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@client.Id" class="btn btn-info btn-sm">Details</a>
+                        <a asp-action="Update" asp-route-id="@client.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@client.Id" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

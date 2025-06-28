@@ -1,0 +1,9 @@
+ID;Name;Description;Bedrooms;Garage_Spots;Bathrooms;Address;Category;Value;Type;Status;Interested;Buyer
+1;Apartamento Residencial Park;Moderno apartamento com 3 quartos, sendo 1 suíte, sala ampla e cozinha americana;3;2;2;Rua das Flores, 123 Apto 45, Videira, SC;Apartamento;450000,00;Sale;Available;0;None
+2;Apartamento Central Plaza;Apartamento no centro da cidade, 2 quartos, área de serviço e varanda;2;1;1;Avenida Brasil, 456 Ed. Central Plaza, Apto 203, Videira, SC;Apartamento;1800,00;Rent;Available;0;None
+3;Casa Familiar Jardim América;Casa ampla com 4 quartos, sala de estar, sala de jantar, cozinha e área gourmet;4;3;3;Rua dos Ipês, 789 , Videira, SC;Casa;680000,00;Sale;Available;0;None
+4;Casa Térrea Bela Vista;Casa térrea com 2 quartos, quintal amplo e churrasqueira;2;2;1;Rua Bela Vista, 321 , Videira, SC;Casa;2500,00;Rent;Available;0;None
+5;Sítio Recanto Verde;Sítio com 5 hectares, casa sede com 3 quartos, pomar e área para criação;3;4;2;Estrada Rural SC-135, Km 8 , Videira, SC;Sítio;850000,00;Sale;Available;0;None
+6;Sala Comercial Centro Empresarial;Sala comercial de 45m² no centro empresarial, com ar condicionado e internet;0;1;1;Rua Comercial, 555 Sala 12, Videira, SC;Sala Comercial;1200,00;Rent;Available;0;None
+8;Galpão Industrial Zona Norte;Galpão de 500m² com pé direito alto, escritório administrativo e pátio de manobras;0;10;2;Rua Industrial, 200 , Videira, SC;Galpão;4500,00;Rent;Available;0;None
+9;Terreno Residencial Plano;Terreno plano de 450m² em loteamento aprovado, com todas as infraestruturas;0;0;0;Rua Projetada A, Lote 15 Loteamento Novo Horizonte, Videira, SC;Terreno;120000,00;Sale;Available;0;None

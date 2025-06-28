@@ -1,0 +1,198 @@
+﻿@model Model.Property
+@using Model
+@{
+    ViewData["Title"] = "Property Details";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4>@Model.Name</h4>
+                <div>
+                    @if (Model.SoldOrRented)
+                    {
+                        <span class="badge badge-success">@(Model.ForSale ? "Sold" : "Rented")</span>
+                    }
+                    else if (Model.InterestedClients?.Count > 0)
+                    {
+                        <span class="badge badge-warning">@Model.InterestedClients.Count interest(s)</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-secondary">Available</span>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">ID:</dt>
+                        <dd class="col-sm-8">@Model.Id</dd>
+
+                        <dt class="col-sm-4">Number:</dt>
+                        <dd class="col-sm-8">@Model.Number</dd>
+
+                        <dt class="col-sm-4">Description:</dt>
+                        <dd class="col-sm-8">@Model.Description</dd>
+
+                        <dt class="col-sm-4">Category:</dt>
+                        <dd class="col-sm-8">@Model.Category?.Name</dd>
+
+                        <dt class="col-sm-4">Type:</dt>
+                        <dd class="col-sm-8">@(Model.ForSale ? "Sale" : "Rent")</dd>
+
+                        <dt class="col-sm-4">Value:</dt>
+                        <dd class="col-sm-8">@Model.Price.ToString("C")</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Bedrooms:</dt>
+                        <dd class="col-sm-8">@Model.BedroomCount</dd>
+
+                        <dt class="col-sm-4">Garage Spots:</dt>
+                        <dd class="col-sm-8">@Model.GarageSpots</dd>
+
+                        <dt class="col-sm-4">Bathrooms:</dt>
+                        <dd class="col-sm-8">@Model.BathroomCount</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <h5 class="mt-4">Address</h5>
+            <div class="row">
+                <div class="col-md-12">
+                    <address>
+                        @Model.Address?.Street<br />
+                        @if (!string.IsNullOrEmpty(Model.Address?.Street))
+                        {
+                            @Model.Address?.Street
+                            <br />
+                        }
+                        @Model.Address?.City, @Model.Address?.State_Province<br />
+                        @if (!string.IsNullOrEmpty(Model.Address?.Postal_Code))
+                        {
+                            <text>ZIP Code: @Model.Address?.Postal_Code<br /></text>
+                        }
+                        @Model.Address?.Country
+                    </address>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h5>Clients</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6>Register Interest</h6>
+                            </div>
+                            <div class="card-body">
+                                <form asp-action="AddInterest" method="post">
+                                    <input type="hidden" name="propertyId" value="@Model.Id" />
+                                    <div class="form-group">
+                                        <label>Select Client:</label>
+                                        @if (ViewBag.Clients != null && ((List<Client>)ViewBag.Clients).Any())
+                                        {
+                                            <select name="clientId" class="form-control" required
+                                                    asp-items="@(new SelectList(ViewBag.Clients, "Id", "Name"))">
+                                                <option value="">Select a client</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <div class="alert alert-warning">No clients registered.</div>
+                                        }
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Register Interest</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6>Register Sale/Rental</h6>
+                            </div>
+                            <div class="card-body">
+                                <form asp-action="RegisterSaleRental" method="post">
+                                    <input type="hidden" name="propertyId" value="@Model.Id" />
+                                    <div class="form-group">
+                                        <label>Select Client:</label>
+                                        @if (ViewBag.Clients != null && ((List<Client>)ViewBag.Clients).Any())
+                                        {
+                                            <select name="clientId" class="form-control" required
+                                                    asp-items="@(new SelectList(ViewBag.Clients, "Id", "Name"))">
+                                                <option value="">Select a client</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <div class="alert alert-warning">No clients registered.</div>
+                                        }
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="sold" id="sold" value="true">
+                                        <label class="form-check-label" for="sold">Mark as Sold (unchecked for Rental)</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-success mt-2">Confirm Operation</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.InterestedClients?.Any() == true)
+                {
+                    <div class="mt-4">
+                        <h6>Interested Clients</h6>
+                        <div class="list-group">
+                            @foreach (var client in Model.InterestedClients)
+                            {
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@client.Name</strong><br>
+                                        <small>@client.Phone | @client.Email</small>
+                                    </div>
+                                    <div>
+                                        <a asp-controller="Client" asp-action="Details" asp-route-id="@client.Id"
+                                           class="btn btn-sm btn-info">View Client</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (Model.BuyerClient != null)
+                {
+                    <div class="mt-4">
+                        <h6>Purchasing Client</h6>
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5>@Model.BuyerClient.Name</h5>
+                                <p>
+                                    <strong>Contact:</strong> @Model.BuyerClient.Phone | @Model.BuyerClient.Email<br>
+                                    <strong>CPF:</strong> @Model.BuyerClient.CPF<br>
+                                    <strong>Date:</strong> @Model.SaleOrRentalDate?.ToString("MM/dd/yyyy")<br>
+                                    <strong>Status:</strong> @(Model.SoldOrRented ? "Sold" : "Rented")
+                                </p>
+                                <a asp-controller="Client" asp-action="Details" asp-route-id="@Model.BuyerClient.Id"
+                                   class="btn btn-sm btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="card-footer">
+            <a asp-action="Index" class="btn btn-secondary">Back</a>
+            <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+        </div>
+    </div>
+</div>

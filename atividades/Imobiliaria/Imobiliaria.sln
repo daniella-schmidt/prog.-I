@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36212.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imobiliaria", "Imobiliaria\Imobiliaria.csproj", "{BF77BEFD-CB56-448D-83FE-D8ED661194F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Model", "Model\Model.csproj", "{A7F79AA9-5683-4269-895F-572326A7698D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{CB8AE297-C738-4509-937A-CA6C63EEA8C9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF77BEFD-CB56-448D-83FE-D8ED661194F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF77BEFD-CB56-448D-83FE-D8ED661194F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF77BEFD-CB56-448D-83FE-D8ED661194F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF77BEFD-CB56-448D-83FE-D8ED661194F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7F79AA9-5683-4269-895F-572326A7698D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7F79AA9-5683-4269-895F-572326A7698D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7F79AA9-5683-4269-895F-572326A7698D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7F79AA9-5683-4269-895F-572326A7698D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB8AE297-C738-4509-937A-CA6C63EEA8C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB8AE297-C738-4509-937A-CA6C63EEA8C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB8AE297-C738-4509-937A-CA6C63EEA8C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB8AE297-C738-4509-937A-CA6C63EEA8C9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {118DB065-6EA7-4469-8CDC-E75FF12C0D9D}
+	EndGlobalSection
+EndGlobal
