@@ -3,7 +3,7 @@ using Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Adiciona serviços ao container
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ClientRepository>();
@@ -12,7 +12,7 @@ builder.Services.AddScoped<CategoryRepository>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configura o pipeline de requisições HTTP
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -28,29 +28,29 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-InitializeCategories(); 
-InitializeProperties();
-InitializeClients();
+InicializarCategorias();
+InicializarPropriedades();
+InicializarClientes();
 
 app.Run();
 
-static void InitializeCategories()
+static void InicializarCategorias()
 {
     if (PropertyData.Categories.Count == 0)
     {
         PropertyData.Categories.AddRange(new List<Category>
         {
-            new Category { Id = 1, Name = "Apartamento", Description = "Unidade residencial em edifício com múltiplos andares" },
-            new Category { Id = 2, Name = "Casa", Description = "Residência térrea ou sobrado com área privativa" },
-            new Category { Id = 3, Name = "Sítio", Description = "Propriedade rural para lazer e descanso" },
-            new Category { Id = 4, Name = "Sala Comercial", Description = "Espaço comercial para estabelecimento de negócios" },
-            new Category { Id = 5, Name = "Galpão", Description = "Espaço amplo para armazenamento ou indústria" },
+            new Category { Id = 1, Name = "Apartamento", Description = "Unidade residencial em prédio" },
+            new Category { Id = 2, Name = "Casa", Description = "Residência com quintal privativo" },
+            new Category { Id = 3, Name = "Sítio/Fazenda", Description = "Propriedade rural para lazer ou agricultura" },
+            new Category { Id = 4, Name = "Escritório Comercial", Description = "Espaço para uso empresarial" },
+            new Category { Id = 5, Name = "Galpão", Description = "Área ampla para armazenamento ou uso industrial" },
             new Category { Id = 6, Name = "Terreno", Description = "Lote urbano ou rural para construção" }
         });
     }
 }
 
-static void InitializeProperties()
+static void InicializarPropriedades()
 {
     if (PropertyData.Properties.Count == 0)
     {
@@ -62,8 +62,8 @@ static void InitializeProperties()
             {
                 Id = 1,
                 Number = 345,
-                Name = "Apartamento Residencial Park",
-                Description = "Moderno apartamento com 3 quartos, sendo 1 suíte, sala ampla e cozinha americana",
+                Name = "Apartamento Parque Residencial",
+                Description = "Apartamento moderno com 3 quartos (1 suíte), sala ampla e cozinha americana",
                 BedroomCount = 3,
                 GarageSpots = 2,
                 BathroomCount = 2,
@@ -85,8 +85,8 @@ static void InitializeProperties()
             {
                 Id = 2,
                 Number = 895,
-                Name = "Apartamento Central Plaza",
-                Description = "Apartamento no centro da cidade, 2 quartos, área de serviço e varanda",
+                Name = "Apartamento Plaza Central",
+                Description = "Apartamento no centro com 2 quartos, área de serviço e varanda",
                 BedroomCount = 2,
                 GarageSpots = 1,
                 BathroomCount = 1,
@@ -104,13 +104,12 @@ static void InitializeProperties()
                     Address_Type = "Residencial"
                 }
             },
-
             new Property
             {
                 Id = 3,
                 Number = 745,
                 Name = "Casa Familiar Jardim América",
-                Description = "Casa ampla com 4 quartos, sala de estar, sala de jantar, cozinha e área gourmet",
+                Description = "Casa espaçosa com 4 quartos, sala, copa, cozinha e área gourmet",
                 BedroomCount = 4,
                 GarageSpots = 3,
                 BathroomCount = 3,
@@ -132,8 +131,8 @@ static void InitializeProperties()
             {
                 Id = 4,
                 Number = 741,
-                Name = "Casa Térrea Bela Vista",
-                Description = "Casa térrea com 2 quartos, quintal amplo e churrasqueira",
+                Name = "Casa Bela Vista",
+                Description = "Casa térrea com 2 quartos, quintal amplo e área de churrasco",
                 BedroomCount = 2,
                 GarageSpots = 2,
                 BathroomCount = 1,
@@ -151,13 +150,12 @@ static void InitializeProperties()
                     Address_Type = "Residencial"
                 }
             },
-
             new Property
             {
                 Id = 5,
                 Number = 12,
-                Name = "Sítio Recanto Verde",
-                Description = "Sítio com 5 hectares, casa sede com 3 quartos, pomar e área para criação",
+                Name = "Sítio Retiro Verde",
+                Description = "Sítio com 5 hectares, casa principal com 3 quartos, pomar e área para animais",
                 BedroomCount = 3,
                 GarageSpots = 4,
                 BathroomCount = 2,
@@ -167,7 +165,7 @@ static void InitializeProperties()
                 Address = new Address
                 {
                     Id = 5,
-                    Street = "Estrada Rural SC-135, Km 8",
+                    Street = "Estrada SC-135, Km 8",
                     City = "Videira",
                     State_Province = "SC",
                     Country = "Brasil",
@@ -175,13 +173,12 @@ static void InitializeProperties()
                     Address_Type = "Rural"
                 }
             },
-
             new Property
             {
                 Id = 6,
                 Number = 1856,
-                Name = "Sala Comercial Centro Empresarial",
-                Description = "Sala comercial de 45m² no centro empresarial, com ar condicionado e internet",
+                Name = "Escritório Comercial Centro",
+                Description = "Escritório comercial de 45m² com ar condicionado e internet",
                 BedroomCount = 0,
                 GarageSpots = 1,
                 BathroomCount = 1,
@@ -199,13 +196,12 @@ static void InitializeProperties()
                     Address_Type = "Comercial"
                 }
             },
-
             new Property
             {
                 Id = 8,
                 Number = 451,
                 Name = "Galpão Industrial Zona Norte",
-                Description = "Galpão de 500m² com pé direito alto, escritório administrativo e pátio de manobras",
+                Description = "Galpão de 500m² com pé-direito alto, escritório e pátio para manobras",
                 BedroomCount = 0,
                 GarageSpots = 10,
                 BathroomCount = 2,
@@ -223,13 +219,12 @@ static void InitializeProperties()
                     Address_Type = "Industrial"
                 }
             },
-
             new Property
             {
                 Id = 9,
-                Number = 253, 
+                Number = 253,
                 Name = "Terreno Residencial Plano",
-                Description = "Terreno plano de 450m² em loteamento aprovado, com todas as infraestruturas",
+                Description = "Terreno plano de 450m² em loteamento aprovado, com toda infraestrutura",
                 BedroomCount = 0,
                 GarageSpots = 0,
                 BathroomCount = 0,
@@ -251,7 +246,7 @@ static void InitializeProperties()
     }
 }
 
-static void InitializeClients()
+static void InicializarClientes()
 {
     if (ClientData.Clients.Count == 0)
     {
@@ -260,8 +255,8 @@ static void InitializeClients()
             new Client
             {
                 Id = 1,
-                Name = "João Silva",
-                Email = "joao.silva@email.com",
+                Name = "George Russhel",
+                Email = "george.russhel@email.com",
                 Phone = "47999998888",
                 CPF = "123.456.789-00",
                 InterestedProperties = new List<Property>()
@@ -269,8 +264,8 @@ static void InitializeClients()
             new Client
             {
                 Id = 2,
-                Name = "Maria Oliveira",
-                Email = "maria.oliveira@email.com",
+                Name = "Jean Grey",
+                Email = "jean.grey@email.com",
                 Phone = "47988887777",
                 CPF = "987.654.321-00",
                 InterestedProperties = new List<Property>()
@@ -278,8 +273,8 @@ static void InitializeClients()
             new Client
             {
                 Id = 3,
-                Name = "Carlos Souza",
-                Email = "carlos.souza@email.com",
+                Name = "Kurt Wagner",
+                Email = "kurt.wagner@email.com",
                 Phone = "47977776666",
                 CPF = "456.789.123-00",
                 InterestedProperties = new List<Property>()

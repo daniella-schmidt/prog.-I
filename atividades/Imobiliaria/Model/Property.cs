@@ -24,17 +24,11 @@ namespace Model
 
         public bool Validate()
         {
-            bool isValid = true;
-            isValid =
-                (this.Id > 0) &&
-                !string.IsNullOrEmpty(this.Name) &&
-                (this.BedroomCount >= 0) &&
-                (this.GarageSpots >= 0) &&
-                (this.BathroomCount >= 0) &&
-                (this.Address != null) &&
-                (this.Category != null) &&
-                (this.Price > 0);
-            return isValid;
+            return !string.IsNullOrEmpty(this.Name) &&
+                   this.Price > 0 &&
+                   this.Address != null &&
+                   !string.IsNullOrEmpty(this.Address.Street) &&
+                   this.Category?.Id > 0;
         }
 
         public string ToDelimitedString(string delimiter = ";")

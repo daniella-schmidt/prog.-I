@@ -40,7 +40,7 @@ namespace Repository
 
         public void Save(Property property)
         {
-            property.Id = GetCount() + 1;
+            property.Id = _properties.Any() ? _properties.Max(p => p.Id) + 1 : 1;
             _properties.Add(property);
         }
 

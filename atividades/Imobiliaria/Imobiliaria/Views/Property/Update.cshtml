@@ -1,123 +1,235 @@
 ﻿@model Model.Property
 @{
-    ViewData["Title"] = "Edit Property";
+    ViewData["Title"] = "Editar";
 }
 
 <div class="container mt-4">
-    <h2>@ViewData["Title"]</h2>
-
-    <form asp-action="Update" method="post">
-        <input type="hidden" asp-for="Id" />
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Number" class="control-label"></label>
-                    <input asp-for="Number" class="form-control" />
-                    <span asp-validation-for="Number" class="text-danger"></span>
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-12">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-warning py-4">
+                    <div class="d-flex align-items-center">
+                        <div>
+                            <h3 class="mb-0">Editar</h3>
+                            <small class="opacity-75">
+                                <i class="bi bi-hash me-1"></i>
+                                ID: @Model.Id
+                            </small>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="Name" class="control-label"></label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Update" method="post">
+                        <input type="hidden" asp-for="Id" />
 
-                <div class="form-group">
-                    <label asp-for="Description" class="control-label"></label>
-                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
+                        <div class="row g-4">
+                            <!-- Informações Básicas -->
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Number" class="form-control" placeholder="Número" />
+                                    <label asp-for="Number" class="ms-2">
+                                        Número
+                                    </label>
+                                    <span asp-validation-for="Number" class="text-danger small ms-3"></span>
+                                </div>
 
-                <div class="form-group">
-                    <label asp-for="Category.Id" class="control-label">Category</label>
-                    <select asp-for="Category.Id" class="form-control" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))">
-                        <option value="">Select a category</option>
-                    </select>
-                    <span asp-validation-for="Category.Id" class="text-danger"></span>
-                </div>
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Name" class="form-control" placeholder="Nome da propriedade" />
+                                    <label asp-for="Name" class="ms-2">
+                                        Nome da propriedade
+                                    </label>
+                                    <span asp-validation-for="Name" class="text-danger small ms-3"></span>
+                                </div>
 
-                <div class="form-group">
-                    <label asp-for="ForSale" class="control-label"></label>
-                    <select asp-for="ForSale" class="form-control">
-                        <option value="true">For Sale</option>
-                        <option value="false">For Rent</option>
-                    </select>
-                    <span asp-validation-for="ForSale" class="text-danger"></span>
+                                <div class="form-floating mb-3">
+                                    <textarea asp-for="Description" class="form-control" placeholder="Descrição" style="height: 100px"></textarea>
+                                    <label asp-for="Description" class="ms-2">
+                                        Descrição
+                                    </label>
+                                    <span asp-validation-for="Description" class="text-danger small ms-3"></span>
+                                </div>
+                            </div>
+
+                            <!-- Características -->
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select asp-for="Category.Id" class="form-select" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))">
+                                        <option value="">Selecione uma categoria</option>
+                                    </select>
+                                    <label asp-for="Category.Id" class="ms-2">
+                                        Categoria
+                                    </label>
+                                    <span asp-validation-for="Category.Id" class="text-danger small ms-3"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <select asp-for="ForSale" class="form-select">
+                                        <option value="true">Venda</option>
+                                        <option value="false">Aluguel</option>
+                                    </select>
+                                    <label asp-for="ForSale" class="ms-2">
+                                        Tipo de Negócio
+                                    </label>
+                                    <span asp-validation-for="ForSale" class="text-danger small ms-3"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Price" type="number" step="0.01" class="form-control" placeholder="Preço" />
+                                    <label asp-for="Price" class="ms-2">
+                                        Preço
+                                    </label>
+                                    <span asp-validation-for="Price" class="text-danger small ms-3"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Características Físicas -->
+                        <div class="row g-4 mt-2">
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="BedroomCount" type="number" class="form-control" placeholder="Quartos" />
+                                    <label asp-for="BedroomCount" class="ms-2">
+                                        Quartos
+                                    </label>
+                                    <span asp-validation-for="BedroomCount" class="text-danger small ms-3"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="BathroomCount" type="number" class="form-control" placeholder="Banheiros" />
+                                    <label asp-for="BathroomCount" class="ms-2">
+                                        Banheiros
+                                    </label>
+                                    <span asp-validation-for="BathroomCount" class="text-danger small ms-3"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="GarageSpots" type="number" class="form-control" placeholder="Vagas Garagem" />
+                                    <label asp-for="GarageSpots" class="ms-2">
+                                        Vagas Garagem
+                                    </label>
+                                    <span asp-validation-for="GarageSpots" class="text-danger small ms-3"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Endereço -->
+                        <h5 class="mt-4 mb-3 text-muted">
+                            <i class="bi bi-geo-alt me-2"></i> Endereço
+                        </h5>
+                        <div class="row g-4">
+                            <div class="col-md-8">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Address.Street" class="form-control" placeholder="Rua/Avenida" />
+                                    <label asp-for="Address.Street" class="ms-2">
+                                        Rua/Avenida
+                                    </label>
+                                    <span asp-validation-for="Address.Street" class="text-danger small ms-3"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Address.City" class="form-control" placeholder="Cidade" />
+                                    <label asp-for="Address.City" class="ms-2">
+                                        Cidade
+                                    </label>
+                                    <span asp-validation-for="Address.City" class="text-danger small ms-3"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Address.State_Province" class="form-control" placeholder="Estado" />
+                                    <label asp-for="Address.State_Province" class="ms-2">
+                                        Estado
+                                    </label>
+                                    <span asp-validation-for="Address.State_Province" class="text-danger small ms-3"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Address.Postal_Code" class="form-control" placeholder="CEP" />
+                                    <label asp-for="Address.Postal_Code" class="ms-2">
+                                        CEP
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Address.Country" class="form-control" placeholder="País" value="Brasil" readonly />
+                                    <label asp-for="Address.Country" class="ms-2">
+                                        País
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer px-0 py-3 bg-transparent mt-4">
+                            <div class="d-flex gap-2 justify-content-between">
+                                <a asp-action="Index" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-1"></i>
+                                    Voltar
+                                </a>
+                                <div class="btn-group">
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="bi bi-save me-1"></i>
+                                        Salvar Alterações
+                                    </button>
+                                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                                        <i class="bi bi-trash me-1"></i>
+                                        Excluir
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="BedroomCount" class="control-label"></label>
-                    <input asp-for="BedroomCount" class="form-control" type="number" min="0" />
-                    <span asp-validation-for="BedroomCount" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="GarageSpots" class="control-label"></label>
-                    <input asp-for="GarageSpots" class="form-control" type="number" min="0" />
-                    <span asp-validation-for="GarageSpots" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="BathroomCount" class="control-label"></label>
-                    <input asp-for="BathroomCount" class="form-control" type="number" min="0" />
-                    <span asp-validation-for="BathroomCount" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Price" class="control-label"></label>
-                    <input asp-for="Price" class="form-control" type="number" step="0.01" min="0" />
-                    <span asp-validation-for="Price" class="text-danger"></span>
-                </div>
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Edite as informações da propriedade
+                </small>
             </div>
         </div>
-
-        <h4 class="mt-4">Address</h4>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Address.Street" class="control-label">Street/Avenue</label>
-                    <input asp-for="Address.Street" class="form-control" />
-                    <span asp-validation-for="Address.Street" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Address.City" class="control-label">City</label>
-                    <input asp-for="Address.City" class="form-control" />
-                    <span asp-validation-for="Address.City" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label asp-for="Address.State_Province" class="control-label">State</label>
-                    <input asp-for="Address.State_Province" class="form-control" />
-                    <span asp-validation-for="Address.State_Province" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Address.Postal_Code" class="control-label">Postal Code</label>
-                    <input asp-for="Address.Postal_Code" class="form-control" />
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Address.Country" class="control-label">Country</label>
-                    <input asp-for="Address.Country" class="form-control" value="Brazil" />
-                    <span asp-validation-for="Address.Country" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group mt-4">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
+    </div>
 </div>
 
+<style>
+    .form-floating label {
+        color: #495057;
+    }
+
+    .form-control:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    }
+
+    .btn-warning {
+        background: #ffc107;
+        border: none;
+        color: #212529;
+    }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+</style>
+
 @section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

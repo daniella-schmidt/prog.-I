@@ -1,47 +1,323 @@
 ﻿@model List<Model.Client>
 @{
-    ViewData["Title"] = "Clients";
+    ViewData["Title"] = "Clientes";
 }
 
-<div class="container mt-4">
-    <h2>@ViewData["Title"]</h2>
-    <div class="d-flex justify-content-between mb-3">
-        <div>
-            <a asp-action="Create" class="btn btn-primary">New Client</a>
-        </div>
-        <div>
-            <a asp-action="ExportDelimitedFile" class="btn btn-success">Export Delimited</a>
-            <a asp-action="ExportFixedFile" class="btn btn-info">Export Fixed Format</a>
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">
+                        <i class="fas fa-users text-primary me-2"></i>
+                    @ViewData["Title"]
+                    </h2>
+                    <p class="text-muted mb-0">Gerencie seus clientes</p>
+                </div>
+                <div>
+                    <span class="badge bg-secondary fs-6">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        Total: @Model.Count()
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>CPF</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="d-flex justify-content-between mb-3">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>
+            Novo Cliente
+        </a>
+        <div class="btn-group ml-2">
+            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="bi bi-download"></i> Exportar
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" asp-action="ExportDelimitedFileWithSave">TXT Delimitado</a></li>
+                <li><a class="dropdown-item" asp-action="ExportFixedFileWithSave">Formato Fixo</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" class="form-control" id="searchInput" placeholder="Buscar por nome, email ou CPF...">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="d-flex justify-content-end">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-secondary" id="viewTable">
+                        <i class="fas fa-table"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="viewCards">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tableView">
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="clientsTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">
+                                    <i class="fas fa-hashtag me-1"></i>
+                                    ID
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-user me-1"></i>
+                                    Nome
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-envelope me-1"></i>
+                                    Email
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-phone me-1"></i>
+                                    Telefone
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-id-card me-1"></i>
+                                    CPF
+                                </th>
+                                <th scope="col" class="text-center">
+                                    <i class="fas fa-cogs me-1"></i>
+                                    Ações
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var client in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-primary">#@client.Id</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                @client.Name!.Substring(0, 1).ToUpper()
+                                            </div>
+                                            <strong>@client.Name</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="mailto:@client.Email" class="text-decoration-none">
+                                            @client.Email
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="tel:@client.Phone" class="text-decoration-none">
+                                            @client.Phone
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <code class="bg-light px-2 py-1 rounded">@client.CPF</code>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Details" asp-route-id="@client.Id"
+                                               class="btn btn-outline-info btn-sm"
+                                               title="Ver Detalhes">
+                                                <i class="fas fa-eye"></i> 
+                                            </a>
+                                            <a asp-action="Update" asp-route-id="@client.Id"
+                                               class="btn btn-outline-warning btn-sm"
+                                               title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@client.Id"
+                                               class="btn btn-outline-danger btn-sm"
+                                               title="Excluir">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cardView" style="display: none;">
+        <div class="row">
             @foreach (var client in Model)
             {
-                <tr>
-                    <td>@client.Id</td>
-                    <td>@client.Name</td>
-                    <td>@client.Email</td>
-                    <td>@client.Phone</td>
-                    <td>@client.CPF</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@client.Id" class="btn btn-info btn-sm">Details</a>
-                        <a asp-action="Update" asp-route-id="@client.Id" class="btn btn-warning btn-sm">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@client.Id" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 shadow-sm client-card">
+                        <div class="card-header bg-primary text-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-user me-2"></i>
+                                    @client.Name
+                                </h6>
+                                <span class="badge bg-light text-dark">#@client.Id</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-envelope me-1"></i>
+                                    Email
+                                </small>
+                                <p class="mb-0">
+                                    <a href="mailto:@client.Email" class="text-decoration-none">
+                                        @client.Email
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-phone me-1"></i>
+                                    Telefone
+                                </small>
+                                <p class="mb-0">
+                                    <a href="tel:@client.Phone" class="text-decoration-none">
+                                        @client.Phone
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-id-card me-1"></i>
+                                    CPF
+                                </small>
+                                <p class="mb-0">
+                                    <code class="bg-light px-2 py-1 rounded">@client.CPF</code>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-grid gap-2">
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Details" asp-route-id="@client.Id"
+                                       class="btn btn-info btn-sm">
+                                        <i class="fas fa-eye me-1"></i>
+                                        Detalhes
+                                    </a>
+                                    <a asp-action="Update" asp-route-id="@client.Id"
+                                       class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit me-1"></i>
+                                        Editar
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@client.Id"
+                                       class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash me-1"></i>
+                                        Excluir
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="fas fa-users text-muted" style="font-size: 4rem;"></i>
+            </div>
+            <h4 class="text-muted mb-3">Nenhum cliente encontrado</h4>
+            <p class="text-muted mb-4">Comece adicionando seu primeiro cliente</p>
+            <a asp-action="Create" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus me-2"></i>
+                Adicionar Primeiro Cliente
+            </a>
+        </div>
+    }
 </div>
+
+<style>
+    .avatar-sm {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .client-card {
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .client-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .table th {
+        border-top: none;
+        font-weight: 600;
+    }
+
+    .btn-group .btn {
+        border-radius: 0.375rem !important;
+        margin-right: 2px;
+    }
+
+    .btn-group .btn:last-child {
+        margin-right: 0;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const table = document.getElementById('clientsTable');
+        const tableRows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        const cards = document.querySelectorAll('.client-card');
+
+        searchInput.addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            // Filter table rows
+            for (let i = 0; i < tableRows.length; i++) {
+                const row = tableRows[i];
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            }
+
+            // Filter cards
+            cards.forEach(function(card) {
+                const text = card.textContent.toLowerCase();
+                card.parentElement.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // View toggle functionality
+        const viewTable = document.getElementById('viewTable');
+        const viewCards = document.getElementById('viewCards');
+        const tableView = document.getElementById('tableView');
+        const cardView = document.getElementById('cardView');
+
+        viewTable.addEventListener('click', function() {
+            tableView.style.display = 'block';
+            cardView.style.display = 'none';
+            viewTable.classList.add('active');
+            viewCards.classList.remove('active');
+        });
+
+        viewCards.addEventListener('click', function() {
+            tableView.style.display = 'none';
+            cardView.style.display = 'block';
+            viewCards.classList.add('active');
+            viewTable.classList.remove('active');
+        });
+
+        // Set default active view
+        viewTable.classList.add('active');
+    });
+</script>
