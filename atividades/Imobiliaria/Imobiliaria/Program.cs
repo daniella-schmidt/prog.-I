@@ -45,7 +45,10 @@ static void InicializarCategorias()
             new Category { Id = 3, Name = "Sítio/Fazenda", Description = "Propriedade rural para lazer ou agricultura" },
             new Category { Id = 4, Name = "Escritório Comercial", Description = "Espaço para uso empresarial" },
             new Category { Id = 5, Name = "Galpão", Description = "Área ampla para armazenamento ou uso industrial" },
-            new Category { Id = 6, Name = "Terreno", Description = "Lote urbano ou rural para construção" }
+            new Category { Id = 6, Name = "Terreno", Description = "Lote urbano ou rural para construção" },
+            new Category { Id = 7, Name = "Loja Comercial", Description = "Ponto comercial para varejo" },
+            new Category { Id = 8, Name = "Cobertura", Description = "Apartamento no último andar com área privativa" },
+            new Category { Id = 9, Name = "Chácara", Description = "Propriedade rural de pequeno porte" }
         });
     }
 }
@@ -198,7 +201,7 @@ static void InicializarPropriedades()
             },
             new Property
             {
-                Id = 8,
+                Id = 7,
                 Number = 451,
                 Name = "Galpão Industrial Zona Norte",
                 Description = "Galpão de 500m² com pé-direito alto, escritório e pátio para manobras",
@@ -221,7 +224,7 @@ static void InicializarPropriedades()
             },
             new Property
             {
-                Id = 9,
+                Id = 8,
                 Number = 253,
                 Name = "Terreno Residencial Plano",
                 Description = "Terreno plano de 450m² em loteamento aprovado, com toda infraestrutura",
@@ -240,6 +243,75 @@ static void InicializarPropriedades()
                     Country = "Brasil",
                     Postal_Code = "89560-007",
                     Address_Type = "Residencial"
+                }
+            },
+            new Property
+            {
+                Id = 9,
+                Number = 102,
+                Name = "Loja Centro Comercial",
+                Description = "Loja de 80m² em shopping center, com vitrine e estoque",
+                BedroomCount = 0,
+                GarageSpots = 0,
+                BathroomCount = 1,
+                Price = 3500.00m,
+                ForSale = false,
+                Category = categorias.First(c => c.Id == 7),
+                Address = new Address
+                {
+                    Id = 10,
+                    Street = "Shopping Center, Loja 205",
+                    City = "Videira",
+                    State_Province = "SC",
+                    Country = "Brasil",
+                    Postal_Code = "89560-008",
+                    Address_Type = "Comercial"
+                }
+            },
+            new Property
+            {
+                Id = 10,
+                Number = 1501,
+                Name = "Cobertura Luxo",
+                Description = "Cobertura duplex com 3 suítes, varanda gourmet e vista panorâmica",
+                BedroomCount = 3,
+                GarageSpots = 3,
+                BathroomCount = 4,
+                Price = 1200000.00m,
+                ForSale = true,
+                Category = categorias.First(c => c.Id == 8),
+                Address = new Address
+                {
+                    Id = 11,
+                    Street = "Avenida Premium, 1501",
+                    City = "Videira",
+                    State_Province = "SC",
+                    Country = "Brasil",
+                    Postal_Code = "89560-009",
+                    Address_Type = "Residencial"
+                }
+            },
+            new Property
+            {
+                Id = 11,
+                Number = 7,
+                Name = "Chácara Recanto Verde",
+                Description = "Chácara de 2 hectares com casa de campo, lago e área de camping",
+                BedroomCount = 2,
+                GarageSpots = 2,
+                BathroomCount = 1,
+                Price = 550000.00m,
+                ForSale = true,
+                Category = categorias.First(c => c.Id == 9),
+                Address = new Address
+                {
+                    Id = 12,
+                    Street = "Estrada Rural, Km 5",
+                    City = "Videira",
+                    State_Province = "SC",
+                    Country = "Brasil",
+                    Postal_Code = "89560-910",
+                    Address_Type = "Rural"
                 }
             }
         });
@@ -277,6 +349,33 @@ static void InicializarClientes()
                 Email = "kurt.wagner@email.com",
                 Phone = "47977776666",
                 CPF = "456.789.123-00",
+                InterestedProperties = new List<Property>()
+            },
+            new Client
+            {
+                Id = 4,
+                Name = "Ororo Munroe",
+                Email = "ororo.munroe@email.com",
+                Phone = "47966665555",
+                CPF = "789.123.456-00",
+                InterestedProperties = new List<Property>()
+            },
+            new Client
+            {
+                Id = 5,
+                Name = "Scott Summers",
+                Email = "scott.summers@email.com",
+                Phone = "47955554444",
+                CPF = "321.654.987-00",
+                InterestedProperties = new List<Property>()
+            },
+            new Client
+            {
+                Id = 6,
+                Name = "Emma Frost",
+                Email = "emma.frost@email.com",
+                Phone = "47944443333",
+                CPF = "654.321.987-00",
                 InterestedProperties = new List<Property>()
             }
         });

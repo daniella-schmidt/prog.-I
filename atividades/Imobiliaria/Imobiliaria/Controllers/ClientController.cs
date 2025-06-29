@@ -43,6 +43,7 @@ namespace Imobiliaria.Controllers
             var clients = _clientRepository.RetrieveAll();
             return View(clients);
         }
+
         [HttpGet]
         public IActionResult Update(int id)
         {
@@ -146,15 +147,15 @@ namespace Imobiliaria.Controllers
         }
 
         [HttpGet]
-        public IActionResult ExportDelimitedFile()
+        public IActionResult ExportDelimitedFileWithSave()
         {
             var content = CreateDelimitedContent();
             var bytes = Encoding.UTF8.GetBytes(content);
-            return File(bytes, "text/plain", "ClientsDelimited.txt");
+            return File(bytes, "text/csv", "ClientsDelimited.txt");
         }
 
         [HttpGet]
-        public IActionResult ExportFixedFile()
+        public IActionResult ExportFixedFileWithSave()
         {
             var content = CreateFixedContent();
             var bytes = Encoding.UTF8.GetBytes(content);
@@ -165,13 +166,24 @@ namespace Imobiliaria.Controllers
         {
             var sb = new StringBuilder();
 
-            foreach (var client in _clientRepository.RetrieveAll())
+            var clients = _clientRepository.RetrieveAll();
+            var allProperties = _propertyRepository.RetrieveAll();
+
+            var propertiesByClient = allProperties
+                .Where(p => p.BuyerClient != null)
+                .GroupBy(p => p.BuyerClient!.Id)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            foreach (var client in clients)
             {
-                var properties = _propertyRepository.RetrieveAll();
+                var clientProperties = propertiesByClient.GetValueOrDefault(client.Id, new List<Property>());
+                var purchasedCount = clientProperties.Count(p => p.ForSale);
+                var rentedCount = clientProperties.Count(p => !p.ForSale);
+
                 sb.AppendLine($"{client.Id};{client.Name};{client.Email};{client.Phone};{client.CPF};" +
                               $"{client.InterestedProperties?.Count ?? 0};" +
-                              $"{properties.Count(p => p.BuyerClient?.Id == client.Id && p.ForSale)};" +
-                              $"{properties.Count(p => p.BuyerClient?.Id == client.Id && !p.ForSale)}");
+                              $"{purchasedCount};" +
+                              $"{rentedCount}");
             }
 
             return sb.ToString();
@@ -181,18 +193,32 @@ namespace Imobiliaria.Controllers
         {
             var sb = new StringBuilder();
 
-            foreach (var client in _clientRepository.RetrieveAll())
+            var clients = _clientRepository.RetrieveAll();
+            var allProperties = _propertyRepository.RetrieveAll();
+
+            var propertiesByClient = allProperties
+                .Where(p => p.BuyerClient != null)
+                .GroupBy(p => p.BuyerClient!.Id)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            foreach (var client in clients)
             {
-                var properties = _propertyRepository.RetrieveAll();
-                sb.AppendFormat("{0,-4} {1,-20} {2,-20} {3,-12} {4,-12} {5,-9} {6,-10} {7,-7}\n",
+                var clientProperties = propertiesByClient.GetValueOrDefault(client.Id, new List<Property>());
+                var purchasedCount = clientProperties.Count(p => p.ForSale);
+                var rentedCount = clientProperties.Count(p => !p.ForSale);
+
+                var truncatedName = client.Name?.Length > 20 ? client.Name.Substring(0, 17) + "..." : client.Name ?? "";
+                var truncatedEmail = client.Email?.Length > 20 ? client.Email.Substring(0, 17) + "..." : client.Email ?? "";
+
+                sb.AppendFormat("{0,-4} {1,-20} {2,-20} {3,-12} {4,-12} {5,-9} {6,-10} {7,-8}\r\n",
                     client.Id,
-                    client.Name?.Length > 20 ? client.Name.Substring(0, 17) + "..." : client.Name,
-                    client.Email?.Length > 20 ? client.Email.Substring(0, 17) + "..." : client.Email,
-                    client.Phone,
-                    client.CPF,
+                    truncatedName,
+                    truncatedEmail,
+                    client.Phone ?? "",
+                    client.CPF ?? "",
                     client.InterestedProperties?.Count ?? 0,
-                    properties.Count(p => p.BuyerClient?.Id == client.Id && p.ForSale),
-                    properties.Count(p => p.BuyerClient?.Id == client.Id && !p.ForSale));
+                    purchasedCount,
+                    rentedCount);
             }
 
             return sb.ToString();

@@ -35,7 +35,7 @@
                 <i class="fas fa-download"></i> Exportar
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" asp-action="ExportDelimitedFileWithSave">TXT Delimitado</a></li>
+                <li><a class="dropdown-item" asp-action="ExportDelimitedFileWithSave">Formato Delimitado</a></li>
                 <li><a class="dropdown-item" asp-action="ExportFixedFileWithSave">Formato Fixo</a></li>
             </ul>
         </div>
@@ -164,8 +164,16 @@
                                     ID
                                 </th>
                                 <th scope="col">
+                                    <i class="fas fa-hashtag me-1"></i>
+                                    Número
+                                </th>
+                                <th scope="col">
                                     <i class="fas fa-home me-1"></i>
-                                    Propriedade
+                                    Nome
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-align-left me-1"></i>
+                                    Descrição
                                 </th>
                                 <th scope="col">
                                     <i class="fas fa-tag me-1"></i>
@@ -173,7 +181,7 @@
                                 </th>
                                 <th scope="col">
                                     <i class="fas fa-map-marker-alt me-1"></i>
-                                    Endereço
+                                    Endereço Completo
                                 </th>
                                 <th scope="col">
                                     <i class="fas fa-bed me-1"></i>
@@ -185,11 +193,15 @@
                                 </th>
                                 <th scope="col">
                                     <i class="fas fa-bath me-1"></i>
-                                    Banh.
+                                    Banheiros
                                 </th>
                                 <th scope="col">
                                     <i class="fas fa-dollar-sign me-1"></i>
-                                    Valor
+                                    Preço
+                                </th>
+                                <th scope="col">
+                                    <i class="fas fa-shopping-cart me-1"></i>
+                                    Tipo
                                 </th>
                                 <th scope="col">
                                     <i class="fas fa-info-circle me-1"></i>
@@ -206,19 +218,44 @@
                             {
                                 <tr>
                                     <td class="fw-bold text-primary">#@property.Id</td>
+                                    <td class="text-center">@property.Number</td>
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <strong>@property.Name</strong>
                                         </div>
                                     </td>
                                     <td>
+                                        <div class="description-cell" title="@property.Description">
+                                            @(property.Description?.Length > 50 ? property.Description.Substring(0, 47) + "..." : property.Description)
+                                        </div>
+                                    </td>
+                                    <td>
                                         <span class="badge bg-primary bg-opacity-10 text-primary">@property.Category?.Name</span>
                                     </td>
-                                    <td>@property.Address?.GetShortAddress()</td>
-                                    <td>@property.BedroomCount</td>
-                                    <td>@property.GarageSpots</td>
-                                    <td>@property.BathroomCount</td>
+                                    <td>
+                                        <div class="address-cell" title="@property.Address?.Street, @property.Address?.City, @property.Address?.State_Province, @property.Address?.Country, @property.Address?.Postal_Code">
+                                            @property.Address?.Street<br />
+                                            <small class="text-muted">@property.Address?.City, @property.Address?.State_Province</small>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">@property.BedroomCount</td>
+                                    <td class="text-center">@property.GarageSpots</td>
+                                    <td class="text-center">@property.BathroomCount</td>
                                     <td class="fw-bold">@property.Price.ToString("C")</td>
+                                    <td>
+                                        @if (property.ForSale)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-dollar-sign me-1"></i> Venda
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-home me-1"></i> Aluguel
+                                            </span>
+                                        }
+                                    </td>
                                     <td>
                                         @if (property.SoldOrRented)
                                         {
@@ -229,7 +266,7 @@
                                         else if (property.InterestedClients?.Count > 0)
                                         {
                                             <span class="badge bg-warning">
-                                                <i class="fas fa-users me-1"></i> @property.InterestedClients.Count
+                                                <i class="fas fa-users me-1"></i> @property.InterestedClients.Count interessado(s)
                                             </span>
                                         }
                                         else
@@ -281,9 +318,17 @@
                                     @property.Name
                                 </h6>
                                 <span class="badge bg-light text-dark">#@property.Id</span>
+                                <span class="badge bg-light text-dark">@property.Number</span>
                             </div>
                         </div>
                         <div class="card-body">
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-align-left me-1"></i>
+                                    Descrição
+                                </small>
+                                <p class="mb-0">@property.Description</p>
+                            </div>
                             <div class="mb-3">
                                 <small class="text-muted">
                                     <i class="fas fa-tag me-1"></i>
@@ -298,7 +343,7 @@
                                     <i class="fas fa-map-marker-alt me-1"></i>
                                     Endereço
                                 </small>
-                                <p class="mb-0">@property.Address?.GetShortAddress()</p>
+                                <p class="mb-0">@property.Address?.Street<br />@property.Address?.City, @property.Address?.State_Province</p>
                             </div>
                             <div class="row">
                                 <div class="col-4">
@@ -330,6 +375,68 @@
                                 </small>
                                 <p class="mb-0 fw-bold">@property.Price.ToString("C")</p>
                             </div>
+                            <div class="mt-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-shopping-cart me-1"></i>
+                                    Tipo
+                                </small>
+                                <p class="mb-0">
+                                    @if (property.ForSale)
+                                    {
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-dollar-sign me-1"></i> Venda
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info">
+                                            <i class="fas fa-home me-1"></i> Aluguel
+                                        </span>
+                                    }
+                                </p>
+                            </div>
+                            @if (property.InterestedClients?.Count > 0)
+                            {
+                                <div class="mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-users me-1"></i>
+                                        Interessados
+                                    </small>
+                                    <p class="mb-0">
+                                        <span class="badge bg-warning text-dark">@property.InterestedClients.Count cliente(s)</span>
+                                    </p>
+                                </div>
+                            }
+                            @if (property.BuyerClient != null)
+                            {
+                                <div class="mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-user me-1"></i>
+                                        Cliente Comprador
+                                    </small>
+                                    <p class="mb-0 text-success fw-bold">@property.BuyerClient.Name</p>
+                                </div>
+                            }
+                            @if (property.InterestDate.HasValue)
+                            {
+                                <div class="mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        Data Interesse
+                                    </small>
+                                    <p class="mb-0">@property.InterestDate.Value.ToString("dd/MM/yyyy")</p>
+                                </div>
+                            }
+                            @if (property.SaleOrRentalDate.HasValue)
+                            {
+                                <div class="mt-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar-check me-1"></i>
+                                        Data @(property.ForSale ? "Venda" : "Aluguel")
+                                    </small>
+                                    <p class="mb-0">@property.SaleOrRentalDate.Value.ToString("dd/MM/yyyy")</p>
+                                </div>
+                            }
                             <div class="mt-3">
                                 <small class="text-muted">
                                     <i class="fas fa-info-circle me-1"></i>
@@ -401,7 +508,6 @@
 </div>
 
 <style>
-
     .property-card {
         transition: transform 0.2s ease-in-out;
     }
@@ -413,6 +519,7 @@
     .table th {
         border-top: none;
         font-weight: 600;
+        white-space: nowrap;
     }
 
     .btn-group .btn {
@@ -454,16 +561,35 @@
         align-items: center;
         justify-content: center;
     }
+
+    .description-cell {
+        max-width: 200px;
+        cursor: help;
+    }
+
+    .address-cell {
+        max-width: 250px;
+        line-height: 1.2;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
 </style>
 
 <script>
-        function filterByCategory(categoryId) {
+    function filterByCategory(categoryId) {
         if (categoryId) {
             window.location.href = '@Url.Action("FilterByCategory", "Property")' + '?categoryId=' + categoryId;
         } else {
             window.location.href = '@Url.Action("Index", "Property")';
         }
     }
+
     document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.getElementById('searchInput');
         const table = document.getElementById('propertiesTable');
@@ -506,38 +632,5 @@
         });
 
         viewTable.classList.add('active');
-
-        categoryFilter.addEventListener('change', function() {
-            const selectedCategory = this.value;
-
-            if (!selectedCategory) {
-                tableRows.forEach(row => row.style.display = '');
-                cards.forEach(card => card.parentElement.style.display = '');
-                return;
-            }
-
-            for (let i = 0; i < tableRows.length; i++) {
-                const row = tableRows[i];
-                const categoryCell = row.querySelector('td:nth-child(3)'); // 3rd column is category
-                const categoryId = categoryCell.querySelector('span')?.textContent.trim();
-
-                if (categoryId && categoryId === selectedCategory) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            }
-
-            cards.forEach(function(card) {
-                const categoryElement = card.querySelector('.card-body div:nth-child(1) p span');
-                const categoryId = categoryElement?.textContent.trim();
-
-                if (categoryId && categoryId === selectedCategory) {
-                    card.parentElement.style.display = '';
-                } else {
-                    card.parentElement.style.display = 'none';
-                }
-            });
-        });
     });
 </script>

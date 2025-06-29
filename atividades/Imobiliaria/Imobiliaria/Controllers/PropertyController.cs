@@ -51,7 +51,24 @@ namespace Imobiliaria.Controllers
         [HttpPost]
         public IActionResult Create(Property property)
         {
-            if (!ModelState.IsValid || !property.Validate())
+            if (!ModelState.IsValid)
+            {
+                InitializeViewBag();
+                return View(property);
+            }
+
+            if (property.Category?.Id > 0)
+            {
+                property.Category = _categoryRepository.Retrieve(property.Category.Id);
+            }
+            else
+            {
+                ModelState.AddModelError("Category.Id", "Selecione uma categoria válida");
+                InitializeViewBag();
+                return View(property);
+            }
+
+            if (!property.Validate())
             {
                 InitializeViewBag();
                 return View(property);
